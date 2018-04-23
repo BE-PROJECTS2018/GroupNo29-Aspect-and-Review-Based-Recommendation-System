@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% load staticfiles %}
+      {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ product.title }}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+      <!-- Optional JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+          <script src="https://code.highcharts.com/modules/drilldown.js">
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+
+  </head>
+
+  <body>
+  {% if error_message %}
+    <strong>{{ error_message }}</strong>
+    {% endif %}
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="{% url 'index' %}">ARBRS System</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'products' %}">Products</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users' %}">Users</a>
+              </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </div>
+        </nav>
+    </header>
+    <div class="container" style="margin-top:30px;">
+        <div class="row">
+            <div class="col-sm-6 text-center">
+                <div>
+                    <img src="{{ product.imUrl }}" class="rounded border border-primarly" style="width:300px;height:300px;">
+                </div>
+                <div>
+
+                </div>
+            </div>
+            <div class="col-sm-6 text-left">
+                <h4>{{ product.title }} </h4>
+                <small>Product ID : {{ product.asin }}</small><br>
+                <!--<small>Product brand : {{ product.brand }}</small><br>-->
+                <small>Product categories : {{ product.categories }}</small>
+                <hr class="my-4">
+                <!--<h5><span class="badge badge-secondary">$ {{ product.price }}</span></h5>-->
+
+            </div>
+        </div>
+
+        <div class="col-xs-12" style="margin:20px 0;">
+            <h4>Description</h4>
+            <div class="border border-info" style="padding:20px;">
+                {{ product.description }}
+            </div>
+        </div>
+
+        <div class="col-xs-12 text-center" style="margin-top:50px;">
+            <h3>REVIEWS</h3>
+        </div>
+        <div class="col-xs-12" style="margin:40px 0;">
+            <div class="list-group">
+                {% for review in reviews %}
+              <div class="list-group-item list-group-item-action flex-column align-items-start border border-secondary">
+                <div class="d-flex w-100 justify-content-between">
+                    <a href="{% url 'userById' review.reviewerID.pk %}" style="text-decoration:none;color:black;"><h5 class="mb-1">{{ review.reviewerID.userName }}</h5>
+                    <div class="d-inline-flex p-1 border border-success" style="font-size: 15px;">{{ review.reviewerID.pk }}</div></a>
+                </div>
+                  <p class="mb-1" style="margin:20px auto;">{{ review.reviewText }}</p>
+                  <small>{{ review.summary }}</small>
+                  <p class="mb-1" style="margin:10px;"><img style="width:20px;height:20px;" src="{% static 'img/thumbs-up-icon.png' %}">&nbsp;{{ review.helpful }}&nbsp;&nbsp;<img style="width:20px;height:20px;" src="{% static 'img/thumbs-down-icon.png' %}">&nbsp;{{ review.notHelpful }}</p>
+                  <small style="float:right;">{{ review.reviewTime }}</small>
+              </div>
+                {% endfor %}
+            </div>
+                <form class="row" style="margin: 50px auto;" action="{% url 'submitReview' product.asin %}" method="post">
+                    {% csrf_token %}
+                    <div class="col-sm-3">
+                            <input class="form-control form-control-sm" placeholder="UserID or Username" aria-label="Search" id="myInputUserID" name="inputUserID">
+                          <div class="list-group" style="margin:10px;height:300px;overflow:auto;" id="myDiv">
+                              {% for user in users %}
+                              <a style="cursor:pointer;" class="list-group-item list-group-item-action listElement" id="{{ user.userID }}">
+                                  <span  class="border border-info">{{ user.userID }}</span> <br> <span style="font-size:15px; ">{{user.userName}}</span>
+                              </a>
+                              {% endfor %}
+                          </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <label><b>Write Your Review....</b></label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" name="textareaReview"></textarea>
+                        </div>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
+                    </div>
+                     <script>
+                        $("#myInputUserID").on("keyup", function() {
+                            var value = $(this).val().toLowerCase();
+                            $("#myDiv a").filter(function() {
+                              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            });
+                          });
+
+                          $(".listElement").on("click",function(){
+                            var id = $(this).attr("id");
+                            $("#myInputUserID").val(id);
+                          });
+                     </script>
+                </form>
+        </div>
+        {% if product_asp_sent %}
+        <div class="col-xs-12 text-center" style="margin-top:50px;">
+            <h3>Product Analysis</h3>
+        </div>
+        <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+        <div class="col-xs-12 text-center" style="margin-top:50px;">
+            <h3>Product Drilldown</h3>
+        </div>
+        <div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <script>
+        var product_asp_sent = "{{ product_asp_sent }}" ;
+            var x=$.parseHTML(product_asp_sent);
+        console.log(JSON.parse(x[0]["data"].substr(1,x[0]["data"].length-2)));
+        var asp_sent = JSON.parse(x[0]["data"].substr(1,x[0]["data"].length-2))["asp_sent"];
+        console.log(asp_sent);
+        var dataSet1 = [];
+        var sum = 0;
+        for(var i in asp_sent)
+        {
+            if(i=="overall")
+                continue;
+            sum += asp_sent[i]["rating"];
+        }
+
+        for(var i in asp_sent)
+        {
+            if(i=="overall")
+                continue;
+            temp = {};
+            temp["name"] = i;
+            temp["y"] = asp_sent[i]["rating"];
+            dataSet1.push(temp);
+        }
+        <!--dataSet1[3]["y"] = 50;-->
+
+        console.log(dataSet1);
+
+
+            Highcharts.chart('container', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Aspectwise Rating'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.2f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: dataSet1
+                }]
+            });
+
+            var battery = "{{ battery }}";
+            battery=JSON.parse(battery);
+
+            var camera = "{{ camera }}";
+            camera=JSON.parse(camera);
+
+            var display = "{{ display }}";
+            display=JSON.parse(display);
+
+            var processor = "{{ processor }}";
+            processor=JSON.parse(processor);
+
+            var overall = "{{ overall }}";
+            overall=JSON.parse(overall);
+
+                // Create the chart
+                Highcharts.chart('container1', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Product Drilldown as per number of Reviewers'
+                    },
+                    subtitle: {
+                        text: 'Click the columns to see drilldown.'
+                    },
+                    xAxis: {
+                        type: 'category'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Total percent of people who specifically reviewed about aspect either positive or negative'
+                        }
+
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        series: {
+                            borderWidth: 0,
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.y:.1f}%'
+                            }
+                        }
+                    },
+
+                    tooltip: {
+                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                    },
+
+                    "series": [
+                        {
+                            "name": "Aspects",
+                            "colorByPoint": true,
+                            "data": [
+                                {
+                                    "name": "Battery",
+                                    "y": (battery[0]+battery[2]),
+                                    "drilldown": "Battery"
+                                },
+                                {
+                                    "name": "Camera",
+                                    "y": (camera[0]+camera[2]),
+                                    "drilldown": "Camera"
+                                },
+                                {
+                                    "name": "Display",
+                                    "y": (display[0]+display[2]),
+                                    "drilldown": "Display"
+                                },
+                                {
+                                    "name": "Processor",
+                                    "y": (processor[0]+processor[2]),
+                                    "drilldown": "Processor"
+                                },
+                                {
+                                    "name": "Overall",
+                                    "y": (overall[0]+overall[2]),
+                                    "drilldown": "Overall"
+                                }
+                            ]
+                        }
+                    ],
+                    "drilldown": {
+                        "series": [
+                            {
+                                "name": "Battery",
+                                "id": "Battery",
+                                "data": [
+                                    [
+                                        "Positive",
+                                        battery[0]*100/(battery[0]+battery[1]+battery[2])
+                                    ],
+                                    [
+                                        "Neutral",
+                                        battery[1]*100/(battery[0]+battery[1]+battery[2])
+                                    ],
+                                    [
+                                        "Negative",
+                                        battery[2]*100/(battery[0]+battery[1]+battery[2])
+                                    ]
+                                ]
+                            },
+                            {
+                                "name": "Camera",
+                                "id": "Camera",
+                                "data": [
+                                    [
+                                        "Positive",
+                                        camera[0]*100/(camera[0]+camera[1]+camera[2])
+                                    ],
+                                    [
+                                        "Neutral",
+                                        camera[1]*100/(camera[0]+camera[1]+camera[2])
+                                    ],
+                                    [
+                                        "Negative",
+                                        camera[2]*100/(camera[0]+camera[1]+camera[2])
+                                    ]
+                                ]
+                            },
+                            {
+                                "name": "Display",
+                                "id": "Display",
+                                "data": [
+                                    [
+                                        "Positive",
+                                        display[0]*100/(display[0]+display[1]+display[2])
+                                    ],
+                                    [
+                                        "Neutral",
+                                        display[1]*100/(display[0]+display[1]+display[2])
+                                    ],
+                                    [
+                                        "Negative",
+                                        display[2]*100/(display[0]+display[1]+display[2])
+                                    ]
+                                ]
+                            },
+                            {
+                                "name": "Processor",
+                                "id": "Processor",
+                                "data": [
+                                    [
+                                        "Positive",
+                                        processor[0]*100/(processor[0]+processor[1]+processor[2])
+                                    ],
+                                    [
+                                        "Neutral",
+                                        processor[1]*100/(processor[0]+processor[1]+processor[2])
+                                    ],
+                                    [
+                                        "Negative",
+                                        processor[2]*100/(processor[0]+processor[1]+processor[2])
+                                    ]
+                                ]
+                            },
+                            {
+                                "name": "Overall",
+                                "id": "Overall",
+                                "data": [
+                                    [
+                                        "Positive",
+                                        overall[0]*100/(overall[0]+overall[1]+overall[2])
+                                    ],
+                                    [
+                                        "Neutral",
+                                        battery[1]*100/(overall[0]+overall[1]+overall[2])
+                                    ],
+                                    [
+                                        "Negative",
+                                        overall[2]*100/(overall[0]+overall[1]+overall[2])
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                });
+        </script>
+        {% endif %}
+
+    </div>
+
+  </body>
+</html>

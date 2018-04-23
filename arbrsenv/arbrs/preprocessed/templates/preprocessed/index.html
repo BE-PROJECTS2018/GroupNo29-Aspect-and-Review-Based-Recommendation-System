@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Product Page!</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+      <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+    <div class="container text-center" style="margin-top : 50px;">
+          <h3 class="display-6">Aspect and Review Based Recommendation System</h3>
+          <hr class="my-4">
+          <p>This system is based on aspect and sentiment parsing in text review content.</p>
+        <div class="row">
+            <div class="col-sm-6 text-center">
+              <div class="card text-center" style="width: 18rem;margin:0 auto;">
+                  <img class="card-img-top" src="https://www.androidcentral.com/sites/androidcentral.com/files/styles/large/public/article_images/2017/09/amazon-echo-spot.jpg?itok=RHM091bg" alt="Card image cap" style="width:100px;height:100px;margin:0 auto;">
+                  <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text">Here we have all the products with their information and corresponding reviews.</p>
+                    <a href="{% url 'products' %}" class="btn btn-primary">Go to Products</a>
+                  </div>
+              </div>
+            </div>
+            <div class="col-sm-6 text-center">
+              <div class="card text-center" style="width: 18rem;margin:0 auto;">
+                  <img class="card-img-top" src="https://www.sonypark360.net/wp-content/uploads/2017/08/profile-pictures.png" alt="Card image cap" style="width:100px;height:100px;margin:0 auto;">
+                  <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                    <p class="card-text">Here we have all the users with their information and corresponding reviews.</p>
+                    <a href="{% url 'users' %}" class="btn btn-primary">Go to Users</a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
